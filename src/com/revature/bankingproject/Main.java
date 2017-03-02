@@ -26,7 +26,11 @@ public class Main {
 				System.out.println("Enter password:");
 				password = sc.next();
 				Customer c1 = new Customer();
-				System.out.println(c1.signUpForServices(username, password));
+				String result = c1.signUpForServices(username, password);
+				System.out.println(result);
+				if(!(result.equals("Account created successfully!"))){
+					main(null);
+				}
 				break;
 			case 2:
 				System.out.println("Customer Login");
