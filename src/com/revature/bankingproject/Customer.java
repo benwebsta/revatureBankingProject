@@ -12,13 +12,6 @@ public class Customer {
 	String userName, passWord;
 
 	/**
-	 * public Customer constructor
-	 */
-	public Customer() {
-
-	}
-
-	/**
 	 * 
 	 * @param customerId
 	 *            the input customer id
@@ -44,26 +37,31 @@ public class Customer {
 						true))) {
 			String line;
 			try {
+
 				// loop through every line in the file to check for username
 				while ((line = br.readLine()) != null) {
 
 					int location = 0;
-					int colonCount = 0;// switch variable to see how many colons
-										// you've seen
+					int colonCount = 0;// switch variable to see how many colon you've seen
 					String currentUserName;
+					String dataType = "";
 
-					// loop through every character in the line
+					// loop through every character in the line, check for username match
 					for (int i = 0; i < line.length(); i++) {
 
 						// when we find a colon or end of line, there is a word
 						if (line.charAt(i) == ':' || i == line.length() - 1) {
-							colonCount++;// increment colon every time we find a
-											// word
-							// switch dictates what kind of word we found
-							if (colonCount == 2) {
+							colonCount++;// increment colon every time we find a word
+
+							// get the type of data on that line
+							if (colonCount == 1) {
+								dataType = line.substring(location, i);
+							}
+
+							// only check customer data types
+							if (dataType.equals("customer") && colonCount == 3) {
 								currentUserName = line.substring(location, i);
-								// if username is in file, throw custom
-								// exception
+								// if username is in file, throw custom exception
 								if (username.equals(currentUserName)) {
 									throw new UserExistsException("This username is already in use.");
 								}
@@ -72,13 +70,14 @@ public class Customer {
 						}
 					}
 				}
-				bw.write(this.customerId + ":" + username + ":" + password);
+				
+				//add customer account to data with id, username, and password
+				bw.write("customer:" + this.customerId + ":" + username + ":" + password);
 				bw.newLine();
 				success = "Account created successfully!";
 			} catch (UserExistsException e) {
 				success = e.getMessage();
 			}
-
 		} catch (IOException e) {
 			success = "Unable to create account.";
 			System.out.println("IO Exception");
